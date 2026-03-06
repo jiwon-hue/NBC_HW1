@@ -3,10 +3,13 @@
 #include <stdlib.h>
 
 void setPotion(int count, int* p_HPPotion, int* p_MPPotion);
+void addPotion(int* p_HPPotion, int* p_MPPotion);
 
 int main(void)
 {
-	int status[4] = { 0, }; //HP, MP, 공격력, 방어럭
+	int status[5] = { 0, }; //HP, MP, 공격력, 방어럭, 레벨
+	status[4] = 1;
+	int subStatus[3] = { 0. }; //힘, 민첩, 지능
 	int* p_HPPotion = (int*)malloc(sizeof(int));
 	int* p_MPPotion = (int*)malloc(sizeof(int));
 	int condition = 1;
@@ -46,13 +49,13 @@ int main(void)
 	printf("4.방어력 UP\n");
 	printf("5.현재 능력치\n");
 	printf("6.Level Up\n");
-	printf("0.나가기\n\n");
+	printf("0.나가기\n");
 
 	do
 	{
 		int num;
 
-		printf(">> 번호를 선택해주세요: ");
+		printf("\n>> 번호를 선택해주세요: ");
 		scanf("%d", &num);
 
 		switch (num) {
@@ -99,14 +102,46 @@ int main(void)
 			printf("현재 방어력: %d\n", status[3]);
 			break;
 		case 5:
-			printf("* HP : %d, MP : %d, 공격력 : %d, 방어력 : %d\n", status[0], status[1], status[2], status[3]);
+			printf("* HP : %d, MP : %d, 공격력 : %d, 방어력 : %d, 레벨: %d\n", status[0], status[1], status[2], status[3], status[4]);
+			printf("* 힘: %d, 민첩: %d, 지능: %d\n", subStatus[0], subStatus[1], subStatus[2]);
+			printf("* HP포션 : %d, MP포션 : %d\n", *p_HPPotion, *p_MPPotion);
 			break;
 		case 6:
-			++ *p_HPPotion;
-			++ *p_MPPotion;
-			printf("* 레벨업! HP/MP 포션이 지급됩니다.\n");
-			printf("남은 HP/MP 포션 수 : %d/%d\n", *p_HPPotion, *p_MPPotion);
+			int inputStat;
+			++status[4];
+			printf("* 레벨업! %d레벨에 도달하였습니다.\n", status[4]);
+			addPotion(p_HPPotion, p_MPPotion);
+			printf("* 레벨업 보상: 보조 스탯 1포인트 [1. 힘, 2. 민첩, 3. 지능]\n");
+			while (true)
+			{
+				printf("원하는 스탯의 번호를 입력해주세요: ");
+				scanf("%d", &inputStat);
+				switch (inputStat)
+				{
+				case 1:	
+					++subStatus[0];
+					printf("힘이 1 증가했습니다.\n");
+					printf("현재 힘: %d\n", subStatus[0]);
+					break;
+				case 2:
+					++subStatus[1];
+					printf("민첩이 1 증가했습니다.\n");
+					printf("현재 민첩: %d\n", subStatus[1]);
+					break;
+				case 3:
+					++subStatus[2];
+					printf("지능이 1 증가했습니다.\n");
+					printf("현재 지능: %d\n", subStatus[2]);
+					break;
+				default:
+					printf("번호를 다시 입력해주세요.\n");
+					continue;
+				}
+				break;
+			}
 			break;
+		default:
+			printf("번호를 다시 입력해주세요\n");
 		}
 
 	} while (condition);
@@ -120,7 +155,16 @@ void setPotion(int count, int* p_HPPotion, int* p_MPPotion)
 {
 	*p_HPPotion = count;
 	*p_MPPotion = count;
-	printf("* 포션이 지급되었습니다. (HP, MP 포션 각 %d개)", count);
+	printf("* 포션이 지급되었습니다. (HP, MP 포션 각 %d개)\n", count);
 
+	return;
+}
+
+void addPotion(int* p_HPPotion, int* p_MPPotion)
+{
+	++*p_HPPotion;
+	++*p_MPPotion;
+	printf("HP/MP 포션이 지급됩니다.\n");
+	printf("남은 HP/MP 포션 수 : %d/%d\n", *p_HPPotion, *p_MPPotion);
 	return;
 }
